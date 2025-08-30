@@ -1,0 +1,29 @@
+<h2>Patients List</h2>
+<button (click)="navigateToAdd()">Add Patient</button>
+<table border="1" cellpadding="5" cellspacing="0">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>First Name</th>
+      <th>Last Name</th>
+      <th>Email</th>
+      <th>Phone</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for(patient of patients;track patient.patientId){
+      <tr>
+        <td>{{patient.patientId}}</td>
+        <td>{{patient.patientFirstName}}</td>
+        <td>{{patient.patientLastName}}</td>
+        <td>{{patient.patientEmail}}</td>
+        <td>{{patient.patientContactNumber}}</td>
+        <td>
+          <button (click)="onDelete(patient.patientId)">Delete</button>
+          <button (click)="onUpdate(patient.patientId)">Update</button>
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>

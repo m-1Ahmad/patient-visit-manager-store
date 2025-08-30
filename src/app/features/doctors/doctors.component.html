@@ -1,0 +1,29 @@
+<h2>Doctors List</h2>
+<button (click)="navigateToAdd()">Add Doctor</button>
+<table border="1" cellpadding="5" cellspacing="0">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>First Name</th>
+      <th>Last Name</th>
+      <th>Email</th>
+      <th>Phone</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for(doctor of doctors; track doctor.doctorId){
+      <tr>
+        <td>{{doctor.doctorId}}</td>
+        <td>{{doctor.doctorFirstName}}</td>
+        <td>{{doctor.doctorLastName}}</td>
+        <td>{{doctor.doctorEmail}}</td>
+        <td>{{doctor.doctorContactNumber}}</td>
+        <td>
+          <button (click)="onDelete(doctor.doctorId)">Delete</button>
+          <button (click)="onUpdate(doctor.doctorId)">Update</button>
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>

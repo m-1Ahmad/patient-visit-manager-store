@@ -1,0 +1,33 @@
+<h2>Visits List</h2>
+<button (click)="navigateToAdd()">Add Visit</button>
+<table border="1" cellpadding="5" cellspacing="0">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Patient</th>
+      <th>Doctor</th>
+      <th>Date</th>
+      <th>Description</th>
+      <th>Visit Type</th>
+      <th>Duration</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for(visit of visits; track visit.visitId){
+      <tr>
+        <td>{{visit.visitId}}</td>
+        <td>{{getPatientName(visit.patientId)}}</td>
+        <td>{{getDoctorName(visit.doctorId)}}</td>
+        <td>{{visit.visitDate}}</td>
+        <td>{{visit.visitDescription}}</td>
+        <td>{{visitTypes[visit.visitTypeId]}}</td>
+        <td>{{visit.duration}}</td>
+        <td>
+          <button (click)="onUpdate(visit.visitId)">Update</button>
+          <button (click)="onDelete(visit.visitId)">Delete</button>
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>

@@ -1,0 +1,66 @@
+<form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+
+  <label>First Name:</label>
+  <input type="text" formControlName="userFirstName" placeholder="Enter first name" appLettersOnly>
+  @if(form.userFirstName.invalid && (form.userFirstName.dirty || form.userFirstName.touched)) {
+    <div class="error">
+      @if(form.userFirstName.hasError('required')) {
+        <span>First Name is required.</span>
+      }
+    </div>
+  }
+
+  <label>Last Name:</label>
+  <input type="text" formControlName="userLastName" placeholder="Enter last name" appLettersOnly>
+  @if(form.userLastName.invalid && (form.userLastName.dirty || form.userLastName.touched)) {
+    <div class="error">
+      @if(form.userLastName.hasError('required')) {
+        <span>Last Name is required.</span>
+      }
+    </div>
+  }
+
+  <label>Email:</label>
+  <input type="email" formControlName="userEmail" placeholder="someone@example.com">
+  @if(form.userEmail.invalid && (form.userEmail.dirty || form.userEmail.touched)) {
+    <div class="error">
+      @if(form.userEmail.hasError('required')) {
+        <span>Email is required.</span>
+      }
+      @if(form.userEmail.hasError('email')) {
+        <span>Invalid Email.</span>
+      }
+    </div>
+  }
+
+  <label>Password:</label>
+  <input type="password" formControlName="userPassword" placeholder="Enter password">
+  @if(form.userPassword.invalid && (form.userPassword.dirty || form.userPassword.touched)) {
+    <div class="error">
+      @if(form.userPassword.hasError('required')) {
+        <span>Password is required.</span>
+      }
+    </div>
+  }
+
+  <label>Role:</label>
+  <select formControlName="userRoleId">
+    @for(role of roles; track role.value) {
+      <option [value]="role.value">{{ role.label }}</option>
+    }
+  </select>
+  @if(form.userRoleId.invalid && (form.userRoleId.dirty || form.userRoleId.touched)) {
+    <div class="error">
+      @if(form.userRoleId.hasError('required')) {
+        <span>Role selection is required.</span>
+      }
+    </div>
+  }
+
+  <button type="submit">Sign Up</button>
+
+  <div class="login-section">
+    <p>Already have an account?</p>
+    <button type="button" class="login-btn" (click)="toLogin()">Login</button>
+  </div>
+</form>

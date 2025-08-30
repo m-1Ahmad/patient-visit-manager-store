@@ -1,0 +1,50 @@
+<h2>Add Doctor</h2>
+<form [formGroup]="doctorForm" (ngSubmit)="onSubmit()">
+  <label>First Name:</label>
+  <input type="text" formControlName="doctorFirstName" placeholder="First Name" appLettersOnly>
+  @if(form.doctorFirstName.invalid && (form.doctorFirstName.dirty || form.doctorFirstName.touched)){
+    <div class="error">
+      @if(form.doctorFirstName.hasError('required')){
+        <span>First name is required.</span>
+      }
+    </div>
+  }
+
+  <label>Last Name:</label>
+  <input type="text" formControlName="doctorLastName" placeholder="Last Name" appLettersOnly>
+  @if(form.doctorLastName.invalid && (form.doctorLastName.dirty || form.doctorLastName.touched)){
+    <div class="error">
+      @if(form.doctorLastName.hasError('required')){
+        <span>Last name is required.</span>
+      }
+    </div>
+  }
+
+  <label>Email:</label>
+  <input type="email" formControlName="doctorEmail" placeholder="someone@example.com">
+  @if(form.doctorEmail.invalid && (form.doctorEmail.dirty || form.doctorEmail.touched)){
+    <div class="error">
+      @if(form.doctorEmail.hasError('required')){
+        <span>Email is required.</span>
+      }
+      @if(form.doctorEmail.hasError('email')){
+        <span>Invalid email.</span>
+      }
+    </div>
+  }
+
+  <label>Phone:</label>
+  <input type="text" formControlName="doctorPhone" placeholder="Phone number">
+  @if(form.doctorPhone.invalid && (form.doctorPhone.dirty || form.doctorPhone.touched)){
+    <div class="error">
+      @if(form.doctorPhone.hasError('required')){
+        <span>Phone number is required.</span>
+      }
+    </div>
+  }
+
+  <div class="button-group">
+    <button type="submit">Add Doctor</button>
+    <button type="button" class="back-btn" (click)="backToList()">Back</button>
+  </div>
+</form>

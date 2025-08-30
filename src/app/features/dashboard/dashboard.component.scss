@@ -1,0 +1,32 @@
+.dashboard-wrapper {
+  text-align: center;
+  padding: 40px;
+
+  h2 {
+    margin-bottom: 30px;
+    color: teal;
+    font-size: 28px;
+  }
+
+  .button-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+
+    button {
+      background-color: teal;
+      color: #fff;
+      border: none;
+      padding: 15px 25px;
+      font-size: 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+
+      &:hover {
+        background-color: #00796b;
+      }
+    }
+  }
+}

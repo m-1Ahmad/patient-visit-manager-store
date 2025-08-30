@@ -1,0 +1,46 @@
+<h2>Update Visit</h2>
+<form [formGroup]="visitForm" (ngSubmit)="onSubmit()">
+  <label>Patient:</label>
+  <select formControlName="patientId">
+    <option value="">Select Patient</option>
+    @for (p of patients; track p.patientId) {
+      <option [value]="p.patientId">{{ p.patientFirstName }} {{ p.patientLastName }}</option>
+    }
+  </select>
+  <br>
+
+  <label>Doctor:</label>
+  <select formControlName="doctorId">
+    <option value="">Select Doctor</option>
+    @for (d of doctors; track d.doctorId) {
+      <option [value]="d.doctorId">{{ d.doctorFirstName }} {{ d.doctorLastName }}</option>
+    }
+  </select>
+  <br>
+
+  <label>Visit Date:</label>
+  <input type="datetime-local" formControlName="visitDate">
+  <br>
+
+  <label>Description:</label>
+  <textarea formControlName="visitDescription"></textarea>
+  <br>
+
+  <label>Visit Type:</label>
+  <select formControlName="visitTypeId">
+    <option value="">Select Visit Type</option>
+    @for (type of visitTypes; track type.id) {
+      <option [value]="type.id">{{ type.name }}</option>
+    }
+  </select>
+  <br>
+
+  <label>Duration (min):</label>
+  <input type="number" formControlName="duration">
+  <br>
+
+  <div class="button-group">
+    <button type="submit">Update Visit</button>
+    <button type="button" class="back-btn" (click)="backToList()">Back</button>
+  </div>
+</form>
