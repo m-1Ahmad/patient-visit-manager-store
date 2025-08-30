@@ -1,0 +1,16 @@
+<nav>
+  {{title}}
+  @if(token) {
+    <button [routerLink]="'patients'">Patients</button>
+    <button [routerLink]="'doctors'">Doctors</button>
+    <button [routerLink]="'visits'">Visits</button>
+    <button [routerLink]="'users'">Users</button>
+    <button (click)="logout()">Logout</button>
+  }
+  @else {
+    <button [routerLink]="'auth/login'">Login</button>
+    <button [routerLink]="'auth/signup'">Signup</button>
+  }
+</nav>
+
+<router-outlet></router-outlet>
