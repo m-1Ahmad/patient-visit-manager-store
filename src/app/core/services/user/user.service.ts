@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { User } from '../../models/user';
 
 @Injectable({
@@ -9,26 +9,21 @@ import { User } from '../../models/user';
 export class UserService {
   private readonly baseUrl = 'http://localhost:5127/user';
 
-  private users$ = new BehaviorSubject<User[]>([]);
-
-  constructor(private http: HttpClient) {
-    this.loadUsers();
-  }
+  constructor(private http: HttpClient) {}
 
   getUsers(): Observable<User[]> {
-    return this.users$.asObservable();
+    return this.http.get<User[]>(this.baseUrl);
   }
 
-  loadUsers(): void {
-    this.http.get<User[]>(this.baseUrl).subscribe(data => {
-      this.users$.next(data);
-    });
+  addUser(user: User): Observable<any> {
+    return this.http.post(`${this.baseUrl}`, user, { responseType: 'text' });
   }
 
-  deleteUser(id: number): void {
-    this.http.delete<void>(`${this.baseUrl}/${id}`).subscribe(() => {
-      const current = this.users$.value.filter(u => u.userId !== id);
-      this.users$.next(current);
-    });
+  updateUser(user: User): Observable<any> {
+    return this.http.put(`${this.baseUrl}/${user.userId}`, user, { responseType: 'text' });
+  }
+
+  deleteUser(id: number): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/${id}`, { responseType: 'text' });
   }
 }

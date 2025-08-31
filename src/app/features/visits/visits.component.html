@@ -14,7 +14,7 @@
     </tr>
   </thead>
   <tbody>
-    @for(visit of visits; track visit.visitId){
+    @for(visit of visits$ | async; track visit.visitId){
       <tr>
         <td>{{visit.visitId}}</td>
         <td>{{getPatientName(visit.patientId)}}</td>

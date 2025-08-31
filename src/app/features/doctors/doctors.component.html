@@ -12,7 +12,7 @@
     </tr>
   </thead>
   <tbody>
-    @for(doctor of doctors; track doctor.doctorId){
+    @for(doctor of doctors$ | async; track doctor.doctorId){
       <tr>
         <td>{{doctor.doctorId}}</td>
         <td>{{doctor.doctorFirstName}}</td>

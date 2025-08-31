@@ -1,35 +1,46 @@
-# PatientVisitManagerAngular
+# Patient Visit Manager
 
-This project was integerated my already working Backend with my Frontend made in Angular.
+## Introduction
+In the **Patient Visit Manager**, I have implemented **NGXS store** for state management. The structure of the application has mostly remained the same, with the **store managing the state** and the **services handling HTTP requests**.  
 
-## Note
+The project uses the **NGXS Storage Plugin** to save the authentication token in **sessionStorage**, ensuring that users remain logged in even after a page refresh.  
 
-- Implemented Almost all the functionalities but not the update visit and not the better UI, due to time constraint.
-- used the Service Store not implemented due to some version errors, but service being used and working.
-- Further enhancements: Add Directives or pipes to format the data as input and database required.
-- We can also add roles and types.
+All **CRUD operations** for **Patients, Doctors, and Visits** have been fully implemented. For **Users**, only **view** and **delete** functionalities have been added; **add** and **update** remain to be implemented.
 
 
-## Development server
+## Store Structure
+Each module has its **own store** inside the `core/store` folder. This is done to avoid a single bulky store and to make the project easier to **extend and maintain**.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
-## Code scaffolding
+## Possible Extensions
+Future extensions could include:
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+- Using **cookies** to manage user sessions.  
+- Adding a **User Profile** page, allowing users to view and manage their own profile.  
 
-## Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+## Notes
+- **Fee Schedule** and **Activity Log** features have not been implemented yet, as doing so would require **backend modifications**.  
+- The project’s **hierarchical structure** and **modular stores** make it **easy to extend** the application in the future, including integrating fee schedules and activity logs once the backend is updated.
 
-## Running unit tests
+## How to Run
+- First make sure you have node <=20.19 by 
+```
+npm -v
+```
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+- Install Angular 17 by:
+```
+npm i @angular/cli@17
+```
 
-## Running end-to-end tests
+- Install Node dependencies by:
+```
+npm install
+```
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+- Serve the project by:
+```
+ng serve
+```
 
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.

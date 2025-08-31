@@ -11,7 +11,7 @@
     </tr>
   </thead>
   <tbody>
-    @for(user of users; track user.userId){
+    @for(user of users$ | async; track user.userId){
       <tr>
         <td>{{user.userId}}</td>
         <td>{{user.userFirstName}}</td>

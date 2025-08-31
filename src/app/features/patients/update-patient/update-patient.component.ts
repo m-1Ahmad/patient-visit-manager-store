@@ -1,9 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PatientService } from '../../../core/services/patient/patient.service';
-import { Patient } from '../../../core/models/patient';
+import { Store, Select } from '@ngxs/store';
+import { Observable } from 'rxjs';
 import { LettersOnlyDirective } from '../../../shared/Directives/letteronly.directive';
+import { Patient } from '../../../core/models/patient';
+import { UpdatePatient } from '../../../core/store/patients/patients.actions';
+import { PatientsState } from '../../../core/store/patients/patients.state';
 
 @Component({
   selector: 'app-patient-update',
@@ -12,11 +15,13 @@ import { LettersOnlyDirective } from '../../../shared/Directives/letteronly.dire
   templateUrl: './update-patient.component.html',
   styleUrl: './update-patient.component.scss'
 })
-export class PatientUpdateComponent {
+export class PatientUpdateComponent implements OnInit {
   patientForm: FormGroup;
   patientId: number | null = null;
 
-  constructor(private patientService: PatientService,private router: Router,private route: ActivatedRoute) {
+  @Select(PatientsState.patients) patients$!: Observable<Patient[]>;
+
+  constructor( private store: Store, private router: Router, private route: ActivatedRoute) {
     this.patientForm = new FormGroup({
       patientFirstName: new FormControl('', Validators.required),
       patientLastName: new FormControl('', Validators.required),
@@ -31,8 +36,8 @@ export class PatientUpdateComponent {
 
   ngOnInit(): void {
     this.patientId = Number(this.route.snapshot.paramMap.get('id'));
-    if (this.patientId) {
-      this.patientService.getPatients().subscribe(patients => {
+    this.patients$.subscribe(patients => {
+      if (this.patientId) {
         const patient = patients.find(p => p.patientId === this.patientId);
         if (patient) {
           this.patientForm.patchValue({
@@ -42,25 +47,27 @@ export class PatientUpdateComponent {
             patientContactNumber: patient.patientContactNumber
           });
         }
-      });
-    }
+      }
+    });
   }
 
   onSubmit(): void {
     if (this.patientForm.valid && this.patientId) {
       const updatedPatient: Patient = {
-        patientId: this.patientId!,
-        patientFirstName: this.form['patientFirstName'].value,
-        patientLastName: this.form['patientLastName'].value,
-        patientEmail: this.form['patientEmail'].value,
-        patientContactNumber: this.form['patientContactNumber'].value
+        patientId: this.patientId,
+        patientFirstName: this.form['patientFirstName'].value!,
+        patientLastName: this.form['patientLastName'].value!,
+        patientEmail: this.form['patientEmail'].value!,
+        patientContactNumber: this.form['patientContactNumber'].value!
       };
 
-      this.patientService.updatePatient(updatedPatient);
-      this.router.navigate(['/patients']);
+      this.store.dispatch(new UpdatePatient(updatedPatient)).subscribe({
+        next: () => this.router.navigate(['/patients'])
+      });
     }
   }
-  backToList(): void{
+
+  backToList(): void {
     this.router.navigate(['/patients']);
   }
 }

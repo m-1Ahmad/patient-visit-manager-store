@@ -1,11 +1,27 @@
 <nav>
-  {{title}}
-  @if(token) {
-    <button [routerLink]="'patients'">Patients</button>
-    <button [routerLink]="'doctors'">Doctors</button>
-    <button [routerLink]="'visits'">Visits</button>
-    <button [routerLink]="'users'">Users</button>
-    <button (click)="logout()">Logout</button>
+  {{ title }}
+  @if (token$ | async) {
+    @if (role$ | async; as role) {
+      @if (role === 'Admin') {
+        <button routerLink="/dashboard">Dashboard</button>
+        <button routerLink="/users">Users</button>
+        <button routerLink="/patients">Patients</button>
+        <button routerLink="/visits">Visits</button>
+        <button routerLink="/doctors">Doctors</button>
+      }
+      @if (role === 'Doctor') {
+        <button routerLink="/dashboard">Dashboard</button>
+        <button routerLink="/visits">Visits</button>
+        <button routerLink="/doctors">Doctors</button>
+      }
+      @if (role === 'Receptionist') {
+        <button routerLink="/dashboard">Dashboard</button>
+        <button routerLink="/patients">Patients</button>
+        <button routerLink="/visits">Visits</button>
+      }
+
+      <button (click)="logout()">Logout</button>
+    }
   }
   @else {
     <button [routerLink]="'auth/login'">Login</button>

@@ -1,24 +1,26 @@
 import { Component } from '@angular/core';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
-import { PatientService } from '../../../core/services/patient/patient.service';
-import { Patient } from '../../../core/models/patient';
 import { Router } from '@angular/router';
+import { Store } from '@ngxs/store';
 import { LettersOnlyDirective } from '../../../shared/Directives/letteronly.directive';
+import { Patient } from '../../../core/models/patient';
+import { AddPatient } from '../../../core/store/patients/patients.actions';
 
 @Component({
   selector: 'app-patient-add',
   standalone: true,
-  imports: [ReactiveFormsModule,LettersOnlyDirective],
-  templateUrl:'./add-patient.component.html',
+  imports: [ReactiveFormsModule, LettersOnlyDirective],
+  templateUrl: './add-patient.component.html',
   styleUrl: './add-patient.component.scss'
 })
 export class PatientAddComponent {
-  constructor(private patientService: PatientService, private router: Router) {}
+  constructor(private store: Store, private router: Router) {}
+
   patientForm = new FormGroup({
-      patientFirstName: new FormControl('', Validators.required),
-      patientLastName: new FormControl('', Validators.required),
-      patientEmail: new FormControl('', [Validators.required, Validators.email]),
-      patientPhone: new FormControl('', Validators.required)
+    patientFirstName: new FormControl('', Validators.required),
+    patientLastName: new FormControl('', Validators.required),
+    patientEmail: new FormControl('', [Validators.required, Validators.email]),
+    patientPhone: new FormControl('', Validators.required)
   });
 
   get form() {
@@ -28,17 +30,20 @@ export class PatientAddComponent {
   onSubmit(): void {
     if (this.patientForm.valid) {
       const newPatient: Patient = {
-        patientId: 12,
-        patientFirstName: this.form.patientFirstName.value,
-        patientLastName: this.form.patientLastName.value,
-        patientEmail: this.form.patientEmail.value,
-        patientContactNumber: this.form.patientPhone.value
+        patientId: 0,
+        patientFirstName: this.form.patientFirstName.value!,
+        patientLastName: this.form.patientLastName.value!,
+        patientEmail: this.form.patientEmail.value!,
+        patientContactNumber: this.form.patientPhone.value!
       };
-      this.patientService.addPatient(newPatient);
-      this.router.navigate(['/patients']);
+
+      this.store.dispatch(new AddPatient(newPatient)).subscribe({
+        next: () => this.router.navigate(['/patients'])
+      });
     }
   }
-  backToList(): void{
+
+  backToList(): void {
     this.router.navigate(['/patients']);
   }
 }

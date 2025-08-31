@@ -1,42 +1,52 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { VisitService } from '../../core/services/visit/visit.service';
+import { Select, Store } from '@ngxs/store';
+import { Observable } from 'rxjs';
 import { Visit } from '../../core/models/visit';
-import { PatientService } from '../../core/services/patient/patient.service';
-import { DoctorService } from '../../core/services/doctor/doctor.service';
 import { Patient } from '../../core/models/patient';
 import { Doctor } from '../../core/models/doctor';
+import { VisitsState } from '../../core/store/visits/visits.state';
+import { LoadVisits, DeleteVisit } from '../../core/store/visits/visits.actions';
+import { LoadPatients } from '../../core/store/patients/patients.actions';
+import { PatientsState } from '../../core/store/patients/patients.state';
+import { DoctorsState } from '../../core/store/doctors/doctors.state';
+import { LoadDoctors } from '../../core/store/doctors/doctors.actions';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
-  selector: 'app-visit-list',
-  templateUrl: './visits.component.html',
+  selector: 'app-visits',
   standalone: true,
-  imports:[],
+  imports: [AsyncPipe],
+  templateUrl: './visits.component.html',
   styleUrl: './visits.component.scss'
 })
 export class VisitsComponent {
-  visits: Visit[] = [];
-  patients: Patient[] = [];
-  doctors: Doctor[] = [];
+  @Select(VisitsState.visits) visits$!: Observable<Visit[]>;
+  @Select(PatientsState.patients) patients$!: Observable<Patient[]>;
+  @Select(DoctorsState.doctors) doctors$!: Observable<Doctor[]>;
 
-  visitTypes: Record<number,string> = {
+  visitTypes: Record<number, string> = {
     1: 'Consultation',
     2: 'Follow Up',
     3: 'Emergency'
   };
 
-  constructor(private visitService: VisitService,private patientService: PatientService,private doctorService: DoctorService,
-    private router: Router) {}
+  patients: Patient[] = [];
+  doctors: Doctor[] = [];
+
+  constructor(private store: Store, private router: Router) {}
 
   ngOnInit(): void {
-    this.visitService.getVisits().subscribe(data => this.visits = data);
-    this.patientService.getPatients().subscribe(data => this.patients = data);
-    this.doctorService.getDoctors().subscribe(data => this.doctors = data);
+    this.store.dispatch(new LoadVisits());
+    this.store.dispatch(new LoadPatients());
+    this.store.dispatch(new LoadDoctors());
+    this.patients$.subscribe(p => this.patients = p);
+    this.doctors$.subscribe(d => this.doctors = d);
   }
 
   onDelete(id: number): void {
-    if(confirm("Are you sure to delete this visit?")) {
-      this.visitService.deleteVisit(id);
+    if (confirm('Are you sure to delete this visit?')) {
+      this.store.dispatch(new DeleteVisit(id));
     }
   }
 

@@ -1,12 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { VisitService } from '../../../core/services/visit/visit.service';
-import { PatientService } from '../../../core/services/patient/patient.service';
-import { DoctorService } from '../../../core/services/doctor/doctor.service';
+import { Store, Select } from '@ngxs/store';
+import { Observable } from 'rxjs';
+import { Visit } from '../../../core/models/visit';
 import { Patient } from '../../../core/models/patient';
 import { Doctor } from '../../../core/models/doctor';
-import { Visit } from '../../../core/models/visit';
+import { VisitsState } from '../../../core/store/visits/visits.state';
+import { PatientsState } from '../../../core/store/patients/patients.state';
+import { DoctorsState } from '../../../core/store/doctors/doctors.state';
+import { LoadVisits, UpdateVisit } from '../../../core/store/visits/visits.actions';
+import { LoadPatients } from '../../../core/store/patients/patients.actions';
+import { LoadDoctors } from '../../../core/store/doctors/doctors.actions';
 
 @Component({
   selector: 'app-visit-update',
@@ -16,6 +21,10 @@ import { Visit } from '../../../core/models/visit';
   styleUrl: './update-visit.component.scss'
 })
 export class VisitUpdateComponent implements OnInit {
+  @Select(VisitsState.visits) visits$!: Observable<Visit[]>;
+  @Select(PatientsState.patients) patients$!: Observable<Patient[]>;
+  @Select(DoctorsState.doctors) doctors$!: Observable<Doctor[]>;
+
   patients: Patient[] = [];
   doctors: Doctor[] = [];
   visitId!: number;
@@ -35,22 +44,18 @@ export class VisitUpdateComponent implements OnInit {
     { id: 3, name: 'Emergency' }
   ];
 
-  constructor(
-    private visitService: VisitService,
-    private patientService: PatientService,
-    private doctorService: DoctorService,
-    private router: Router,
-    private route: ActivatedRoute
-  ) {}
+  constructor(private store: Store, private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    this.patientService.getPatients().subscribe(data => (this.patients = data));
-    this.doctorService.getDoctors().subscribe(data => (this.doctors = data));
-
+    this.store.dispatch(new LoadPatients());
+    this.store.dispatch(new LoadDoctors());
+    this.store.dispatch(new LoadVisits());
+    this.patients$.subscribe(p => this.patients = p);
+    this.doctors$.subscribe(d => this.doctors = d);
     this.visitId = Number(this.route.snapshot.paramMap.get('id'));
 
     if (this.visitId) {
-      this.visitService.getVisits().subscribe((visits: Visit[]) => {
+      this.visits$.subscribe(visits => {
         const visit = visits.find(v => v.visitId === this.visitId);
         if (visit) {
           this.visitForm.patchValue({
@@ -71,7 +76,7 @@ export class VisitUpdateComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.visitForm.valid) {
+    if (this.visitForm.valid && this.visitId) {
       const updatedVisit: any = {
         visitId: this.visitId,
         patientId: Number(this.form['patientId'].value),
@@ -83,8 +88,9 @@ export class VisitUpdateComponent implements OnInit {
         feesId: Number(this.form['visitTypeId'].value)
       };
 
-      this.visitService.updateVisit(updatedVisit);
-      this.router.navigate(['/visits']);
+      this.store.dispatch(new UpdateVisit(updatedVisit)).subscribe({
+        next: () => this.router.navigate(['/visits'])
+      });
     }
   }
 

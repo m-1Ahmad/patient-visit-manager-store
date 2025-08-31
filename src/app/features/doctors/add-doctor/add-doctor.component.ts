@@ -1,19 +1,20 @@
 import { Component } from '@angular/core';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
-import { DoctorService } from '../../../core/services/doctor/doctor.service';
-import { Doctor } from '../../../core/models/doctor';
 import { Router } from '@angular/router';
+import { Store } from '@ngxs/store';
 import { LettersOnlyDirective } from '../../../shared/Directives/letteronly.directive';
+import { Doctor } from '../../../core/models/doctor';
+import { AddDoctor } from '../../../core/store/doctors/doctors.actions';
 
 @Component({
   selector: 'app-doctor-add',
   standalone: true,
   imports: [ReactiveFormsModule, LettersOnlyDirective],
   templateUrl: './add-doctor.component.html',
-  styleUrls: ['./add-doctor.component.scss']
+  styleUrl: './add-doctor.component.scss'
 })
 export class DoctorAddComponent {
-  constructor(private doctorService: DoctorService, private router: Router) {}
+  constructor(private store: Store, private router: Router) {}
 
   doctorForm = new FormGroup({
     doctorFirstName: new FormControl('', Validators.required),
@@ -29,17 +30,20 @@ export class DoctorAddComponent {
   onSubmit(): void {
     if (this.doctorForm.valid) {
       const newDoctor: Doctor = {
-        doctorId: 12,
-        doctorFirstName: this.form.doctorFirstName.value,
-        doctorLastName: this.form.doctorLastName.value,
-        doctorEmail: this.form.doctorEmail.value,
-        doctorContactNumber: this.form.doctorPhone.value
+        doctorId: 0,
+        doctorFirstName: this.form.doctorFirstName.value!,
+        doctorLastName: this.form.doctorLastName.value!,
+        doctorEmail: this.form.doctorEmail.value!,
+        doctorContactNumber: this.form.doctorPhone.value!
       };
-      this.doctorService.addDoctor(newDoctor);
-      this.router.navigate(['/doctors']);
+
+      this.store.dispatch(new AddDoctor(newDoctor)).subscribe({
+        next: () => this.router.navigate(['/doctors'])
+      });
     }
   }
-  backToList(): void{
+
+  backToList(): void {
     this.router.navigate(['/doctors']);
   }
 }

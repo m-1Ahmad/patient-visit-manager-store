@@ -1,11 +1,15 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { VisitService } from '../../../core/services/visit/visit.service';
-import { PatientService } from '../../../core/services/patient/patient.service';
-import { DoctorService } from '../../../core/services/doctor/doctor.service';
+import { Store, Select } from '@ngxs/store';
+import { Observable } from 'rxjs';
 import { Patient } from '../../../core/models/patient';
 import { Doctor } from '../../../core/models/doctor';
+import { AddVisit } from '../../../core/store/visits/visits.actions';
+import { PatientsState } from '../../../core/store/patients/patients.state';
+import { LoadPatients } from '../../../core/store/patients/patients.actions';
+import { DoctorsState } from '../../../core/store/doctors/doctors.state';
+import { LoadDoctors } from '../../../core/store/doctors/doctors.actions';
 
 @Component({
   selector: 'app-visit-add',
@@ -15,6 +19,8 @@ import { Doctor } from '../../../core/models/doctor';
   styleUrl: './add-visit.component.scss'
 })
 export class VisitAddComponent {
+  @Select(PatientsState.patients) patients$!: Observable<Patient[]>;
+  @Select(DoctorsState.doctors) doctors$!: Observable<Doctor[]>;
   patients: Patient[] = [];
   doctors: Doctor[] = [];
 
@@ -33,38 +39,40 @@ export class VisitAddComponent {
     { id: 3, name: 'Emergency' }
   ];
 
-  constructor(
-    private visitService: VisitService,
-    private patientService: PatientService,
-    private doctorService: DoctorService,
-    private router: Router
-  ) {}
+  constructor(private store: Store, private router: Router) {}
 
   ngOnInit(): void {
-    this.patientService.getPatients().subscribe(data => this.patients = data);
-    this.doctorService.getDoctors().subscribe(data => this.doctors = data);
+    this.store.dispatch(new LoadPatients());
+    this.store.dispatch(new LoadDoctors());
+    this.patients$.subscribe(p => this.patients = p);
+    this.doctors$.subscribe(d => this.doctors = d);
   }
 
   get form() { return this.visitForm.controls; }
 
   onSubmit(): void {
-    if(this.visitForm.valid) {
+    if (this.visitForm.valid) {
       const newVisit: any = {
-      visitId: 12,
-      patientId: Number(this.visitForm.controls['patientId'].value),
-      doctorId: Number(this.visitForm.controls['doctorId'].value),
-      visitDate: this.visitForm.controls['visitDate'].value,
-      visitDescription: this.visitForm.controls['visitDescription'].value,
-      visitTypeId: Number(this.visitForm.controls['visitTypeId'].value),
-      duration: this.visitForm.controls['duration'].value,
-      feesId: Number(this.visitForm.controls['visitTypeId'].value)
-    };
-      this.visitService.addVisit(newVisit);
-      alert('Visit Added Successfully');
-      this.router.navigate(['/visits']);
+        visitId: 0,
+        patientId: Number(this.form.patientId.value),
+        doctorId: Number(this.form.doctorId.value),
+        visitDate: this.form.visitDate.value,
+        visitDescription: this.form.visitDescription.value,
+        visitTypeId: Number(this.form.visitTypeId.value),
+        duration: Number(this.form.duration.value),
+        feesId: Number(this.form.visitTypeId.value)
+      };
+
+      this.store.dispatch(new AddVisit(newVisit)).subscribe({
+        next: () => {
+          alert('Visit Added Successfully');
+          this.router.navigate(['/visits']);
+        }
+      });
     }
   }
-  backToList(): void{
+
+  backToList(): void {
     this.router.navigate(['/visits']);
   }
 }

@@ -1,30 +1,31 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { Select, Store } from '@ngxs/store';
+import { Observable } from 'rxjs';
 import { Patient } from '../../core/models/patient';
-import { PatientService } from '../../core/services/patient/patient.service';
+import { LoadPatients, DeletePatient } from '../../core/store/patients/patients.actions';
+import { AsyncPipe } from '@angular/common';
+import { PatientsState } from '../../core/store/patients/patients.state';
 
 @Component({
   selector: 'app-patients',
   standalone: true,
-  imports: [],
+  imports: [AsyncPipe],
   templateUrl: './patients.component.html',
   styleUrl: './patients.component.scss'
 })
 export class PatientsComponent {
-  patients: Patient[] = [];
+  @Select(PatientsState.patients) patients$!: Observable<Patient[]>;
 
-  constructor(private patientService: PatientService, private router: Router) {}
+  constructor(private store: Store, private router: Router) {}
 
   ngOnInit(): void {
-    this.patientService.getPatients().subscribe(data => {
-      this.patients = data;
-    });
+    this.store.dispatch(new LoadPatients());
   }
 
   onDelete(patientId: number): void {
-    if(confirm("You Sure want to delete the data?")){
-      this.patientService.deletePatient(patientId);
-      this.router.navigate(['/patients']);
+    if (confirm('Are you sure you want to delete the data?')) {
+      this.store.dispatch(new DeletePatient(patientId));
     }
   }
 
@@ -33,6 +34,6 @@ export class PatientsComponent {
   }
 
   onUpdate(patientId: number): void {
-    this.router.navigate(['/update/patient',patientId]);
+    this.router.navigate(['/update/patient', patientId]);
   }
 }

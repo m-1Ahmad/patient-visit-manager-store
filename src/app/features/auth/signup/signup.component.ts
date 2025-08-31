@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AuthService } from '../../../core/services/auth/auth.service';
 import { LettersOnlyDirective } from '../../../shared/Directives/letteronly.directive';
 import { Router } from '@angular/router';
+import { Store } from '@ngxs/store';
+import { Signup } from '../../../core/store/auth/auth.actions';
 
 @Component({
   selector: 'app-signup',
@@ -12,12 +13,13 @@ import { Router } from '@angular/router';
   styleUrl: './signup.component.scss'
 })
 export class SignupComponent {
-  roles: {value: number, label: string}[] = [
-    {value: 1, label: 'Admin'},
-    {value: 2, label: 'Receptionist'},
-    {value: 3, label: 'Doctor'}
+  roles = [
+    { value: 1, label: 'Admin' },
+    { value: 2, label: 'Receptionist' },
+    { value: 3, label: 'Doctor' }
   ];
-  constructor(private auth: AuthService, private router: Router){}
+
+  constructor(private store: Store, private router: Router) {}
 
   signupForm = new FormGroup({
     userFirstName: new FormControl('', [Validators.required]),
@@ -33,7 +35,7 @@ export class SignupComponent {
 
   onSubmit() {
     if (this.signupForm.valid) {
-      this.auth.signup(this.signupForm.value as any).subscribe({
+      this.store.dispatch(new Signup(this.signupForm.value as any)).subscribe({
         next: () => {
           alert('Signup success Please Login');
           this.router.navigate(['/auth/login']);
@@ -42,7 +44,8 @@ export class SignupComponent {
       });
     }
   }
-  toLogin(){
+
+  toLogin() {
     this.router.navigate(['/auth/login']);
   }
 }
