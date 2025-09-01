@@ -26,7 +26,7 @@ export class PatientUpdateComponent implements OnInit {
       patientFirstName: new FormControl('', Validators.required),
       patientLastName: new FormControl('', Validators.required),
       patientEmail: new FormControl('', [Validators.required, Validators.email]),
-      patientContactNumber: new FormControl('', Validators.required)
+      patientContactNumber: new FormControl('', [Validators.required, Validators.minLength(11), Validators.pattern(/^\d+$/)])
     });
   }
 

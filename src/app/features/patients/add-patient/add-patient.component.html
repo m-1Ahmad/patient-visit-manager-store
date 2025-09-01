@@ -43,6 +43,12 @@
       @if(form.patientPhone.hasError('required')){
         <span>Phone number is required.</span>
       }
+      @if(form.patientPhone.hasError('pattern')){
+        <span>Only Digits are allowed.</span>
+      }
+      @if(form.patientPhone.hasError('minLength')){
+        <span>Phone number should be 11 digit.</span>
+      }
     </div>
   }
   <br>

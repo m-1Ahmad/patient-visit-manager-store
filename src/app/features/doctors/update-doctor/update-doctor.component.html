@@ -43,6 +43,12 @@
       @if(form['doctorContactNumber'].hasError('required')){
         <span>Contact number is required.</span>
       }
+      @if(form['doctorPhone'].hasError('pattern')){
+        <span>Only Numbers are Allowed.</span>
+      }
+      @if(form['doctorPhone'].hasError('minLength')){
+        <span>Length should only be 11 digits.</span>
+      }
     </div>
   }
   <br>
