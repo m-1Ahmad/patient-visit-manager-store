@@ -3,11 +3,6 @@ export class Login {
   constructor(public email: string, public password: string) {}
 }
 
-export class LoginSuccess {
-  static readonly type = '[Auth] Login Success';
-  constructor(public token: string, public role: string) {}
-}
-
 export class Signup {
   static readonly type = '[Auth] Signup';
   constructor(public payload: any) {}

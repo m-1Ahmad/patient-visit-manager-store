@@ -1,7 +1,7 @@
 import { State, Action, StateContext, Selector } from '@ngxs/store';
 import { Injectable } from '@angular/core';
 import { AuthModel } from './auth.model';
-import { Login, LoginSuccess, Signup, Logout } from './auth.actions';
+import { Login, Signup, Logout } from './auth.actions';
 import { AuthService } from '../../services/auth/auth.service';
 import { tap } from 'rxjs/operators';
 
@@ -40,17 +40,12 @@ export class AuthState {
   login(ctx: StateContext<AuthModel>, action: Login) {
     return this.authService.login({ email: action.email, password: action.password }).pipe(
       tap(response => {
-        ctx.dispatch(new LoginSuccess(response.token, response.user.userRole));
+        ctx.patchState({
+          token: response.token,
+          role: response.user.userRole
+        });
       })
     );
-  }
-
-  @Action(LoginSuccess)
-  loginSuccess(ctx: StateContext<AuthModel>, action: LoginSuccess) {
-    ctx.patchState({
-      token: action.token,
-      role: action.role
-    });
   }
 
   @Action(Signup)
