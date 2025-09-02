@@ -12,23 +12,12 @@ button {
   font-size: 14px;
 }
 
-button:first-of-type {
+button {
   background-color: #008080;
   color: #fff;
 
   &:hover {
     background-color: #006666;
-  }
-}
-
-td button {
-  background-color: #fff;
-  color: #008080;
-  border: 1px solid #008080;
-
-  &:hover {
-    background-color: #008080;
-    color: #fff;
   }
 }
 

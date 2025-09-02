@@ -1,5 +1,5 @@
 <h2>Update Doctor</h2>
-<form [formGroup]="doctorForm" (ngSubmit)="onSubmit()">
+<form [formGroup]="doctorForm">
   <label>First Name:</label>
   <input type="text" formControlName="doctorFirstName" placeholder="First Name" appLettersOnly>
   @if(form['doctorFirstName'].invalid && (form['doctorFirstName'].dirty || form['doctorFirstName'].touched)){
@@ -46,14 +46,14 @@
       @if(form['doctorPhone'].hasError('pattern')){
         <span>Only Numbers are Allowed.</span>
       }
-      @if(form['doctorPhone'].hasError('minLength')){
+      @if(form['doctorPhone'].hasError('minLength') || form['doctorPhone'].hasError('maxlength')){
         <span>Length should only be 11 digits.</span>
       }
     </div>
   }
   <br>
   <div class="button-group">
-    <button type="submit">Update Doctor</button>
+    <button type="submit" (click)="onSubmit()" [disabled]="doctorForm.invalid">Update Doctor</button>
     <button type="button" class="back-btn" (click)="backToList()">Back</button>
   </div>
 </form>

@@ -19,7 +19,7 @@ export const appConfig: ApplicationConfig = {
       NgxsModule.forRoot([AuthState, PatientsState, DoctorsState, VisitsState, UsersState]),
       NgxsStoragePluginModule.forRoot({
         key: 'auth',
-        storage: StorageOption.SessionStorage
+        storage: StorageOption.LocalStorage
       })
     )
   ]

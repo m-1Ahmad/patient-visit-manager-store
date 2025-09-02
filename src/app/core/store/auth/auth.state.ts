@@ -9,7 +9,8 @@ import { tap } from 'rxjs/operators';
   name: 'auth',
   defaults: {
     token: null,
-    role: null
+    role: null,
+    userId: null
   }
 })
 @Injectable()
@@ -24,6 +25,11 @@ export class AuthState {
   @Selector()
   static role(state: AuthModel) {
     return state.role;
+  }
+
+  @Selector()
+  static userId(state: AuthModel) {
+    return state.userId;
   }
 
   @Selector()
@@ -42,7 +48,8 @@ export class AuthState {
       tap(response => {
         ctx.patchState({
           token: response.token,
-          role: response.user.userRole
+          role: response.user.userRole,
+          userId: response.user.userId
         });
       })
     );
@@ -57,7 +64,8 @@ export class AuthState {
   logout(ctx: StateContext<AuthModel>) {
     ctx.setState({
       token: null,
-      role: null
+      role: null,
+      userId: null
     });
   }
 }

@@ -1,1 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
+button:disabled {
+  border: 1px solid #ccc;
+  background-color: #ccc;
+  color: #666;
+  cursor: not-allowed !important;
+  opacity: 0.7;
+}

@@ -20,7 +20,10 @@ export class DoctorAddComponent {
     doctorFirstName: new FormControl('', Validators.required),
     doctorLastName: new FormControl('', Validators.required),
     doctorEmail: new FormControl('', [Validators.required, Validators.email]),
-    doctorPhone: new FormControl('', [Validators.required, Validators.minLength(11), Validators.pattern(/^\d+$/)])
+    doctorPhone: new FormControl('', [Validators.required, 
+      Validators.minLength(11), 
+      Validators.maxLength(11), 
+      Validators.pattern(/^\d+$/)])
   });
 
   get form() {

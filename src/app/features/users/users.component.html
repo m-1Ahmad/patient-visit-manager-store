@@ -11,15 +11,15 @@
     </tr>
   </thead>
   <tbody>
-    @for(user of users$ | async; track user.userId){
+    @for(user of users$ | async; track user.userId; let i = $index){
       <tr>
-        <td>{{user.userId}}</td>
+        <td>{{i + 1}}</td>
         <td>{{user.userFirstName}}</td>
         <td>{{user.userLastName}}</td>
         <td>{{user.userEmail}}</td>
         <td>{{user.userRole}}</td>
         <td>
-          <button (click)="onDelete(user.userId)">Delete</button>
+          <button (click)="onDelete(user.userId)" [disabled]="(userId$|async) === user.userId">Delete</button>
         </td>
       </tr>
     }

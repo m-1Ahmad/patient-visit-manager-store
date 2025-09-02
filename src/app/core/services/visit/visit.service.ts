@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Visit } from '../../models/visit';
+import { environment } from '../../../../environments/environment.development';
 
 @Injectable({
   providedIn: 'root'
 })
 export class VisitService {
-  private readonly baseUrl = 'http://localhost:5127/visit';
+  private readonly baseUrl = `${environment.url}visit`;
 
   constructor(private http: HttpClient) {}
 
@@ -20,10 +21,10 @@ export class VisitService {
   }
 
   updateVisit(visit: Visit): Observable<any> {
-    return this.http.put(`${this.baseUrl}/update/${visit.visitId}`, visit, { responseType: 'text' });
+    return this.http.put(`${this.baseUrl}/${visit.visitId}`, visit, { responseType: 'text' });
   }
 
   deleteVisit(id: number): Observable<any> {
-    return this.http.delete(`${this.baseUrl}/delete/${id}`, { responseType: 'text' });
+    return this.http.delete(`${this.baseUrl}/${id}`, { responseType: 'text' });
   }
 }

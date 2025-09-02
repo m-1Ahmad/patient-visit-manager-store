@@ -3,7 +3,8 @@ import { Injectable } from '@angular/core';
 import { DoctorsModel } from './doctors.model';
 import { DoctorService } from '../../services/doctor/doctor.service';
 import { LoadDoctors, AddDoctor, UpdateDoctor, DeleteDoctor } from './doctors.actions';
-import { tap } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 
 @State<DoctorsModel>({
   name: 'doctors',
@@ -59,6 +60,12 @@ export class DoctorsState {
         ctx.patchState({
           doctors: state.doctors.filter(d => d.doctorId !== action.id)
         });
+      }),
+      catchError((err) => {
+        if(err.status == 500){
+          alert('Doctor cannot be deleted due to visit exists');
+        }
+        return throwError(() => err);
       })
     );
   }

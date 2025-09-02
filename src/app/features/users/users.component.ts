@@ -6,6 +6,7 @@ import { UsersState } from '../../core/store/users/users.state';
 import { LoadUsers, DeleteUser } from '../../core/store/users/users.actions';
 import { Observable } from 'rxjs';
 import { Select, Store } from '@ngxs/store';
+import { AuthState } from '../../core/store/auth/auth.state';
 
 @Component({
   selector: 'app-users',
@@ -16,7 +17,8 @@ import { Select, Store } from '@ngxs/store';
 })
 export class UsersComponent {
   @Select(UsersState.users) users$!: Observable<User[]>;
-
+  @Select(AuthState.userId) userId$!: Observable<number>;
+  
   constructor(private store: Store) {}
 
   ngOnInit(): void {

@@ -12,9 +12,9 @@
     </tr>
   </thead>
   <tbody>
-    @for(patient of patients$ | async;track patient.patientId){
+    @for(patient of patients$ | async;track patient.patientId; let i = $index){
       <tr>
-        <td>{{patient.patientId}}</td>
+        <td>{{i + 1}}</td>
         <td>{{patient.patientFirstName}}</td>
         <td>{{patient.patientLastName}}</td>
         <td>{{patient.patientEmail}}</td>

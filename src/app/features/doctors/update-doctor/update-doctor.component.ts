@@ -30,7 +30,10 @@ export class DoctorUpdateComponent implements OnInit {
       doctorFirstName: new FormControl('', Validators.required),
       doctorLastName: new FormControl('', Validators.required),
       doctorEmail: new FormControl('', [Validators.required, Validators.email]),
-      doctorContactNumber: new FormControl('', [Validators.required, Validators.minLength(11), Validators.pattern(/^\d+$/)])
+      doctorContactNumber: new FormControl('', [Validators.required, 
+        Validators.minLength(11), 
+        Validators.maxLength(11), 
+        Validators.pattern(/^\d+$/)])
     });
   }
 

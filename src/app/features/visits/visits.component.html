@@ -7,6 +7,7 @@
       <th>Patient</th>
       <th>Doctor</th>
       <th>Date</th>
+      <th>Time</th>
       <th>Description</th>
       <th>Visit Type</th>
       <th>Duration</th>
@@ -14,12 +15,13 @@
     </tr>
   </thead>
   <tbody>
-    @for(visit of visits$ | async; track visit.visitId){
+    @for(visit of visits$ | async; track visit.visitId; let i = $index){
       <tr>
-        <td>{{visit.visitId}}</td>
+        <td>{{i + 1}}</td>
         <td>{{getPatientName(visit.patientId)}}</td>
         <td>{{getDoctorName(visit.doctorId)}}</td>
-        <td>{{visit.visitDate}}</td>
+        <td>{{visit.visitDate?.split('T')?.slice(0,1)}}</td>
+        <td>{{visit.visitDate?.split('T')?.slice(1)}}</td>
         <td>{{visit.visitDescription}}</td>
         <td>{{visitTypes[visit.visitTypeId]}}</td>
         <td>{{visit.duration}}</td>

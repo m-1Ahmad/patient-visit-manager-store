@@ -13,6 +13,7 @@ import { DoctorUpdateComponent } from './features/doctors/update-doctor/update-d
 import { VisitAddComponent } from './features/visits/add-visit/add-visit.component';
 import { NotAuthorizeComponent } from './features/auth/not-authorize/not-authorize.component';
 import { DashboardComponent } from './features/dashboard/dashboard.component';
+import { VisitUpdateComponent } from './features/visits/update-visit/update-visit.component';
 
 export const ROUTES: Routes = [
   {path: '', redirectTo:'/dashboard', pathMatch: 'full'},
@@ -26,6 +27,7 @@ export const ROUTES: Routes = [
   {path: 'update/patient/:id', component: PatientUpdateComponent, canActivate: [authGuard], data: {roles: ['Admin', 'Receptionist']}},
   {path: 'visits', component: VisitsComponent, canActivate: [authGuard], data: {roles: ['Admin', 'Doctor', 'Receptionist']}},
   {path: 'add/visit', component: VisitAddComponent, canActivate: [authGuard], data: {roles: ['Admin', 'Doctor', 'Receptionist']}},
+  {path: 'update/visit/:id', component: VisitUpdateComponent, canActivate: [authGuard], data: {roles: ['Admin', 'Doctor', 'Receptionist']}},
   {path: 'doctors', component: DoctorsComponent, canActivate: [authGuard], data: {roles: ['Admin', 'Doctor']}},
   {path: 'add/doctor', component: DoctorAddComponent, canActivate: [authGuard], data: {roles: ['Admin', 'Doctor']}},
   {path: 'update/doctor/:id', component: DoctorUpdateComponent, canActivate: [authGuard], data: {roles: ['Admin', 'Doctor']}},

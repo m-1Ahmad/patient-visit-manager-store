@@ -3,18 +3,20 @@ import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Store } from '@ngxs/store';
 import { Logout } from '../../store/auth/auth.actions';
+import { environment } from '../../../../environments/environment.development';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly baseUrl = 'http://localhost:5127/auth';
+  private readonly baseUrl = `${environment.url}auth`;
   private logoutTimer: any;
   private store = inject(Store);
 
   constructor(private http: HttpClient) {}
 
   login(credentials: { email: string; password: string }): Observable<{ token: string; user: any }> {
+    this.startLogoutCountdown();
     return this.http.post<{ token: string; user: any }>(`${this.baseUrl}/login`, credentials);
   }
 
